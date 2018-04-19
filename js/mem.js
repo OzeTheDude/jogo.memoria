@@ -1,16 +1,32 @@
-var finalPairs = {};
-var everyButton = {};
+var finalPairs = new Array;
+var everyButton = new Array;
+var flippedCards = new Array;
+var gameStarted = false;
+var controlEnabled = false;
+var gridSize = 0;
+
+var maxScore = 0;
+var curScore = 0;
+var tries = 0;
+var timeSpent = 0;
 
 function populateTable(tableid,gamesize) {
 	var gm_width = gamesize;
 	var gm_height = gamesize;
+
+	gridSize = gamesize;
+
+	maxScore = (gamesize*gamesize)/2;
+	document.getElementById("p-score").innerHTML = curScore+'/'+maxScore;
+	document.getElementById("p-moves").innerHTML = tries;
+	//document.getElementById("p-timer").innerHTML = "";
 
 	var rows = "";
 
 	for (var x = 0; x < gm_height; x++) {
 		rows += "<tr>\n";
 		for (var y = 0; y < gm_width; y++) {
-			rows += "<td id='btn"+x+y+"' class='imgBTN'><img class='image-button' src='images/ques.jpg'></td>\n";
+			rows += "<td id='btn"+x+y+"' onmousedown='flipImage(btn"+x+y+")' class='imgBTN'><img class='front' src='images/ques.jpg'><img class='back' src='images/ques.jpg'></td>\n";
 		}
 		rows += "</tr>\n";
 	}
@@ -46,13 +62,38 @@ function pairButtons() {
 
 function givePairsImages() {
 	for (var i = 0; i < finalPairs.length; i++){
-		finalPairs[i][0].innerHTML = "<img class='image-button' src='images/"+i+".png'>"
+		finalPairs[i][0].innerHTML = "<img class='front' src='images/"+i+".png'><img class='back' src='images/ques.jpg'>"
 		finalPairs[i][0].imageid = i;
-		finalPairs[i][1].innerHTML = "<img class='image-button' src='images/"+i+".png'>"
+		finalPairs[i][1].innerHTML = "<img class='front' src='images/"+i+".png'><img class='back' src='images/ques.jpg'>"
 		finalPairs[i][1].imageid = i;
 	}
 
-	hideImages();
+	var allButtonsHTML = document.getElementsByClassName("imgBTN");
+	var allButtons = HTMLtoArray(allButtonsHTML);
+
+	if (gridSize == "4") {
+		for (var i = 0; i < allButtons.length; i++) {
+			allButtons[i].firstChild.classList.add('big');
+			allButtons[i].lastChild.classList.add('big');
+			console.log("added big")
+		}
+	}else if(gridSize == "6"){
+		for (var i = 0; i < allButtons.length; i++) {
+			allButtons[i].firstChild.classList.add('medium');
+			allButtons[i].lastChild.classList.add('medium');
+			console.log("added med")
+		}
+	}else if(gridSize == "8"){
+		for (var i = 0; i < allButtons.length; i++) {
+			allButtons[i].firstChild.classList.add('small');
+			allButtons[i].lastChild.classList.add('small');
+			console.log("added small")
+		}
+	}
+
+	setTimeout(function () {
+		hideImages();
+	}, 5000);
 }
 
 function hideImages() {
@@ -61,7 +102,67 @@ function hideImages() {
 	var allButtons = HTMLtoArray(allButtonsHTML);
 
 	for (var i = 0; i < allButtons.length; i++) {
+		allButtons[i].firstChild.classList.toggle('flipped');
+		allButtons[i].lastChild.classList.toggle('flipped');
+	}
 
+	gameStarted = true;
+	controlEnabled = true;
+
+	setInterval(myTimer, 1000);
+}
+
+function myTimer(){
+	timeSpent++
+	var ndate = new Date(null);
+	ndate.setSeconds(timeSpent);
+	document.getElementById("p-timer").innerHTML = ndate.toISOString().substr(11, 8);;
+}
+
+function flipImage(arg){
+
+	if (gameStarted && controlEnabled) {
+		if (arg.firstChild.classList.contains('flipped')) {
+
+			arg.firstChild.classList.toggle('flipped');
+			arg.lastChild.classList.toggle('flipped');
+			flippedCards.push(arg);
+
+		}
+	}
+	
+	if (flippedCards.length == 2) {
+		controlEnabled = false;
+
+		tries++;
+		document.getElementById("p-moves").innerHTML = tries;
+
+		setTimeout(function () {
+
+			if(checkPairs(flippedCards[0],flippedCards[1])){
+				console.log("pair made!");
+				curScore++
+				document.getElementById("p-score").innerHTML = curScore+'/'+maxScore;
+			}else{
+				for (var i = 0; i < flippedCards.length; i++) {
+					flippedCards[i].firstChild.classList.toggle('flipped');
+					flippedCards[i].lastChild.classList.toggle('flipped');
+				}
+			}
+
+			flippedCards = new Array(0);
+			controlEnabled = true;
+		}, 1500);
+	}
+
+	console.log(flippedCards);
+}
+
+function checkPairs(arg1, arg2){
+	if (arg1.firstChild.src == arg2.firstChild.src) {
+		return true;
+	}else{
+		return false;
 	}
 }
 
