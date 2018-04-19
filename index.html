@@ -5,12 +5,22 @@
 	<meta charset="UTF-8">
 	<title>Jogo da Memória topper</title>
 </head>
-<body onload="populateTable('gametable')">
-	<p align="center" style="font-size: 20pt; text-shadow: 2px 2px 5px rgba(0,0,0,0.3);">Jogo da Memória</p>
-
+<body>
 	<script type="text/javascript" src="js/mem.js"></script>
 
-	<table id="game-table" align="center">
+	<div id="dark-overlay">
+		<div id="menu-overlay">
+			<h2>Jogo da Memória</h2>
+			<input type="radio" name="difficulty" value="4">Fácil (4x4)
+			<input type="radio" name="difficulty" value="6">Normal (6x6)
+			<input type="radio" name="difficulty" value="8">Dificil (8x8)
+			<br>
+			<p id="menu-warning">Selecione uma dificuldade!</p>
+			<button class="fancy-button" onmousedown="startGame()">Jogar</button>
+		</div>
+	</div>
+
+	<table id="game-table" align="center" cellpadding=0 cellspacing=0>
 		<tbody id="gametable">
 		</tbody>
 	</table>
