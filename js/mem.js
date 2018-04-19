@@ -26,7 +26,7 @@ function populateTable(tableid,gamesize) {
 	for (var x = 0; x < gm_height; x++) {
 		rows += "<tr>\n";
 		for (var y = 0; y < gm_width; y++) {
-			rows += "<td id='btn"+x+y+"' onmousedown='flipImage(btn"+x+y+")' class='imgBTN'><img class='front' src='images/ques.jpg'><img class='back' src='images/ques.jpg'></td>\n";
+			rows += "<td id='btn"+x+y+"' onmousedown='flipImage(btn"+x+y+")' class='imgBTN'><img class='front' src='images/ques.png'><img class='back' src='images/ques.png'></td>\n";
 		}
 		rows += "</tr>\n";
 	}
@@ -62,9 +62,9 @@ function pairButtons() {
 
 function givePairsImages() {
 	for (var i = 0; i < finalPairs.length; i++){
-		finalPairs[i][0].innerHTML = "<img class='front' src='images/"+i+".png'><img class='back' src='images/ques.jpg'>"
+		finalPairs[i][0].innerHTML = "<img class='front' src='images/"+i+".png'><img class='back' src='images/ques.png'>"
 		finalPairs[i][0].imageid = i;
-		finalPairs[i][1].innerHTML = "<img class='front' src='images/"+i+".png'><img class='back' src='images/ques.jpg'>"
+		finalPairs[i][1].innerHTML = "<img class='front' src='images/"+i+".png'><img class='back' src='images/ques.png'>"
 		finalPairs[i][1].imageid = i;
 	}
 
@@ -96,6 +96,7 @@ function givePairsImages() {
 	}, 5000);
 }
 
+var glbTimer;
 function hideImages() {
 	var allButtonsHTML = document.getElementsByClassName("imgBTN");
 
@@ -109,14 +110,15 @@ function hideImages() {
 	gameStarted = true;
 	controlEnabled = true;
 
-	setInterval(myTimer, 1000);
+	glbTimer = setInterval(myTimer, 1000);
 }
 
 function myTimer(){
 	timeSpent++
 	var ndate = new Date(null);
 	ndate.setSeconds(timeSpent);
-	document.getElementById("p-timer").innerHTML = ndate.toISOString().substr(11, 8);;
+	var result = ndate.toISOString().substr(11, 8);
+	document.getElementById("p-timer").innerHTML = result;
 }
 
 function flipImage(arg){
@@ -143,6 +145,9 @@ function flipImage(arg){
 				console.log("pair made!");
 				curScore++
 				document.getElementById("p-score").innerHTML = curScore+'/'+maxScore;
+
+				if (curScore==maxScore) {endGame();}
+
 			}else{
 				for (var i = 0; i < flippedCards.length; i++) {
 					flippedCards[i].firstChild.classList.toggle('flipped');
@@ -152,7 +157,7 @@ function flipImage(arg){
 
 			flippedCards = new Array(0);
 			controlEnabled = true;
-		}, 1500);
+		}, 1000);
 	}
 
 	console.log(flippedCards);
@@ -184,8 +189,47 @@ function startGame(){
 		setTimeout(function () {
 			document.getElementById('dark-overlay').style.display = "none";
 			document.getElementById('game-table').style.opacity = 1;
+			document.getElementById('info-div').style.opacity = 1;
 		}, 1000);
 		populateTable('gametable',difficulty);
+	}
+}
+
+function endGame(){
+
+	document.getElementById("pf-score").innerHTML = 'Pontos: '+curScore+'/'+maxScore;
+	document.getElementById("pf-moves").innerHTML = 'Tentativas: '+tries;
+	var ndate = new Date(null);
+	ndate.setSeconds(timeSpent);
+	document.getElementById("pf-timer").innerHTML = 'Tempo: '+ndate.toISOString().substr(11, 8);
+
+	document.getElementById('dark-overlay').style.display = "inline";
+	document.getElementById('dark-overlay').style.opacity = 0;
+	setTimeout(function () {
+		document.getElementById('dark-overlay').style.opacity = 1;
+	}, 100);
+	
+
+	document.getElementById('menu-overlay').style.display = "none";
+	document.getElementById('end-overlay').style.display = "inline";
+
+	clearInterval(glbTimer);
+}
+
+function restartGame(){
+	document.getElementById('menu-overlay').style.display = "inline";
+	document.getElementById('end-overlay').style.display = "none";
+
+	document.getElementById('game-table').style.opacity = 0;
+	document.getElementById('info-div').style.opacity = 0;
+	maxScore = 0;
+	curScore = 0;
+	tries = 0;
+	timeSpent = 0;
+
+	var radios = document.getElementsByName('difficulty');
+	for (var i = 0; i < radios.length; i++) {
+		radios[i].checked = false;
 	}
 }
 

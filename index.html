@@ -18,9 +18,17 @@
 			<p id="menu-warning">Selecione uma dificuldade!</p>
 			<button class="fancy-button" onmousedown="startGame()">Jogar</button>
 		</div>
+
+		<div id="end-overlay">
+			<h2>Fim de jogo</h2>
+			<p id="pf-score">Pontos:</p>
+			<p id="pf-moves">Tentativas:</p>
+			<p id="pf-timer">Tempo:</p>
+			<button class="fancy-button" onmousedown="restartGame()">Recomeçar</button>
+		</div>
 	</div>
 
-	<div class="info-div">
+	<div id="info-div">
 		<p id="p-score" class="info-text">0</p>
 		<p id="p-moves" class="info-text">0</p>
 		<p id="p-timer" class="info-text">00:00:00</p>
