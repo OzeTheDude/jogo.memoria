@@ -262,6 +262,11 @@ function restartGame(){
 	for (var i = 0; i < radios.length; i++) {
 		radios[i].checked = false;
 	}
+
+	var radios2 = document.getElementsByName('gametype');
+	for (var i = 0; i < radios.length; i++) {
+		radios2[i].checked = false;
+	}
 }
 
 function getRandomInt(min, max) {
