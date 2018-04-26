@@ -75,19 +75,16 @@ function givePairsImages() {
 		for (var i = 0; i < allButtons.length; i++) {
 			allButtons[i].firstChild.classList.add('big');
 			allButtons[i].lastChild.classList.add('big');
-			console.log("added big")
 		}
 	}else if(gridSize == "6"){
 		for (var i = 0; i < allButtons.length; i++) {
 			allButtons[i].firstChild.classList.add('medium');
 			allButtons[i].lastChild.classList.add('medium');
-			console.log("added med")
 		}
 	}else if(gridSize == "8"){
 		for (var i = 0; i < allButtons.length; i++) {
 			allButtons[i].firstChild.classList.add('small');
 			allButtons[i].lastChild.classList.add('small');
-			console.log("added small")
 		}
 	}
 
@@ -134,7 +131,7 @@ function flipImage(arg){
 		}
 	}
 	
-	if (flippedCards.length == 2) {
+	if (flippedCards.length == 2 && controlEnabled) {
 		controlEnabled = false;
 
 		tries++;
@@ -143,7 +140,12 @@ function flipImage(arg){
 		setTimeout(function () {
 
 			if(checkPairs(flippedCards[0],flippedCards[1])){
-				console.log("pair made!");
+
+				for (var i = 0; i < flippedCards.length; i++) {
+					flippedCards[i].firstChild.classList.toggle('match');
+					//flippedCards[i].lastChild.classList.toggle('match');
+				}
+
 				curScore++
 				document.getElementById("p-score").innerHTML = curScore+'/'+maxScore;
 
@@ -158,10 +160,10 @@ function flipImage(arg){
 
 			flippedCards = new Array(0);
 			controlEnabled = true;
+
 		}, 1000);
 	}
 
-	console.log(flippedCards);
 }
 
 function checkPairs(arg1, arg2){

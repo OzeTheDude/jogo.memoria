@@ -138,6 +138,18 @@ body{
 	transform: rotateY( 180deg );
 }
 
+.imgBTN img.match{
+	background-color: rgb(66, 244, 128);
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	border: solid 2px rgb(66, 244, 128);
+
+	animation-name: pulse;
+	animation-duration: .75s;
+}
+
 .fancy-button{
 	background-color: rgb(206, 206, 206);
 	border: 0;
@@ -184,4 +196,18 @@ body{
 	opacity: 0;
 
 	transition: opacity, 1s;
+}
+
+@keyframes pulse {
+	from {
+		transform: scale3d(1, 1, 1);
+	}
+
+	15% {
+		transform: scale3d(1.2, 1.2, 1.2);
+	}
+
+	to {
+		transform: scale3d(1, 1, 1);
+	}
 }
