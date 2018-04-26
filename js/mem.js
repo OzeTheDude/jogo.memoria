@@ -26,7 +26,7 @@ function populateTable(tableid,gamesize) {
 	for (var x = 0; x < gm_height; x++) {
 		rows += "<tr>\n";
 		for (var y = 0; y < gm_width; y++) {
-			rows += "<td id='btn"+x+y+"' onmousedown='flipImage(btn"+x+y+")' class='imgBTN'><img class='front' src='images/ques.png'><img class='back' src='images/ques.png'></td>\n";
+			rows += "<td id='btn"+x+y+"' onmousedown='flipImage(btn"+x+y+")' class='imgBTN'><img class='front flipped' src='images/ques.png'><img class='back flipped' src='images/ques.png'></td>\n";
 		}
 		rows += "</tr>\n";
 	}
@@ -62,9 +62,9 @@ function pairButtons() {
 
 function givePairsImages() {
 	for (var i = 0; i < finalPairs.length; i++){
-		finalPairs[i][0].innerHTML = "<img class='front' src='images/"+i+".png'><img class='back' src='images/ques.png'>"
+		finalPairs[i][0].innerHTML = "<img class='front flipped' src='images/"+i+".png'><img class='back flipped' src='images/ques.png'>"
 		finalPairs[i][0].imageid = i;
-		finalPairs[i][1].innerHTML = "<img class='front' src='images/"+i+".png'><img class='back' src='images/ques.png'>"
+		finalPairs[i][1].innerHTML = "<img class='front flipped' src='images/"+i+".png'><img class='back flipped' src='images/ques.png'>"
 		finalPairs[i][1].imageid = i;
 	}
 
@@ -91,13 +91,13 @@ function givePairsImages() {
 		}
 	}
 
-	setTimeout(function () {
-		hideImages();
-	}, 5000);
+	hideImages();
 }
 
 var glbTimer;
 function hideImages() {
+
+	/*
 	var allButtonsHTML = document.getElementsByClassName("imgBTN");
 
 	var allButtons = HTMLtoArray(allButtonsHTML);
@@ -106,6 +106,7 @@ function hideImages() {
 		allButtons[i].firstChild.classList.toggle('flipped');
 		allButtons[i].lastChild.classList.toggle('flipped');
 	}
+	*/
 
 	gameStarted = true;
 	controlEnabled = true;
