@@ -11,10 +11,15 @@
 	<div id="dark-overlay">
 		<div id="menu-overlay">
 			<h2>Jogo da Memória</h2>
+			<p>
 			<input type="radio" name="difficulty" value="4">Fácil (4x4)
 			<input type="radio" name="difficulty" value="6">Normal (6x6)
 			<input type="radio" name="difficulty" value="8">Dificil (8x8)
-			<br>
+			</p>
+			<p>
+			<input type="radio" name="gametype" value="normal">Modo Normal
+			<input type="radio" name="gametype" value="wrong">Modo Columbia
+			</p>
 			<p id="menu-warning">Selecione uma dificuldade!</p>
 			<button class="fancy-button" onmousedown="startGame()">Jogar</button>
 		</div>

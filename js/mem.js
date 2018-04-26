@@ -4,17 +4,19 @@ var flippedCards = new Array;
 var gameStarted = false;
 var controlEnabled = false;
 var gridSize = 0;
+var gamemode = "";
 
 var maxScore = 0;
 var curScore = 0;
 var tries = 0;
 var timeSpent = 0;
 
-function populateTable(tableid,gamesize) {
+function populateTable(tableid,gamesize,gametype) {
 	var gm_width = gamesize;
 	var gm_height = gamesize;
 
 	gridSize = gamesize;
+	gamemode = gametype;
 
 	maxScore = (gamesize*gamesize)/2;
 	document.getElementById("p-score").innerHTML = curScore+'/'+maxScore;
@@ -26,7 +28,11 @@ function populateTable(tableid,gamesize) {
 	for (var x = 0; x < gm_height; x++) {
 		rows += "<tr>\n";
 		for (var y = 0; y < gm_width; y++) {
-			rows += "<td id='btn"+x+y+"' onmousedown='flipImage(btn"+x+y+")' class='imgBTN'><img class='front flipped' src='images/ques.png'><img class='back flipped' src='images/ques.png'></td>\n";
+			if(gametype == "wrong"){
+				rows += "<td id='btn"+x+y+"' onmousedown='flipImage(btn"+x+y+")' class='imgBTN'><img class='front flipped' src='images/ques.png'><img class='back flipped' src='images/ques.png'></td>\n";
+			}else{
+				rows += "<td id='btn"+x+y+"' onmousedown='flipImage(btn"+x+y+")' class='imgBTN'><img class='front' src='images/ques.png'><img class='back' src='images/ques.png'></td>\n";
+			}
 		}
 		rows += "</tr>\n";
 	}
@@ -62,9 +68,11 @@ function pairButtons() {
 
 function givePairsImages() {
 	for (var i = 0; i < finalPairs.length; i++){
-		finalPairs[i][0].innerHTML = "<img class='front flipped' src='images/"+i+".png'><img class='back flipped' src='images/ques.png'>"
+		//finalPairs[i][0].innerHTML = "<img class='front flipped' src='images/"+i+".png'><img class='back flipped' src='images/ques.png'>"
+		finalPairs[i][0].firstChild.src = "images/"+i+".png"
 		finalPairs[i][0].imageid = i;
-		finalPairs[i][1].innerHTML = "<img class='front flipped' src='images/"+i+".png'><img class='back flipped' src='images/ques.png'>"
+		//finalPairs[i][1].innerHTML = "<img class='front flipped' src='images/"+i+".png'><img class='back flipped' src='images/ques.png'>"
+		finalPairs[i][1].firstChild.src = "images/"+i+".png"
 		finalPairs[i][1].imageid = i;
 	}
 
@@ -88,22 +96,30 @@ function givePairsImages() {
 		}
 	}
 
-	hideImages();
+	if (gamemode == "normal") {
+		setTimeout(function () {
+			hideImages();
+		}, 5000);
+	}else{
+		hideImages();
+	}
+	
 }
 
 var glbTimer;
 function hideImages() {
 
-	/*
-	var allButtonsHTML = document.getElementsByClassName("imgBTN");
+	if (gamemode == "normal") {
+		var allButtonsHTML = document.getElementsByClassName("imgBTN");
 
-	var allButtons = HTMLtoArray(allButtonsHTML);
+		var allButtons = HTMLtoArray(allButtonsHTML);
 
-	for (var i = 0; i < allButtons.length; i++) {
-		allButtons[i].firstChild.classList.toggle('flipped');
-		allButtons[i].lastChild.classList.toggle('flipped');
+		for (var i = 0; i < allButtons.length; i++) {
+			allButtons[i].firstChild.classList.toggle('flipped');
+			allButtons[i].lastChild.classList.toggle('flipped');
+		}
 	}
-	*/
+	
 
 	gameStarted = true;
 	controlEnabled = true;
@@ -176,16 +192,28 @@ function checkPairs(arg1, arg2){
 
 function startGame(){
 
-	var radios = document.getElementsByName('difficulty');
+	var diff_radios = document.getElementsByName('difficulty');
+	var type_radios = document.getElementsByName('gametype');
 	var difficulty = 0;
+	var gametype = "none";
 
-	for (var i = 0, length = radios.length; i < length; i++){
-		if (radios[i].checked){
-			difficulty = radios[i].value;
+	for (var i = 0, length = diff_radios.length; i < length; i++){
+		if (diff_radios[i].checked){
+			difficulty = diff_radios[i].value;
+		}
+	}
+
+	for (var i = 0, length = type_radios.length; i < length; i++){
+		if (type_radios[i].checked){
+			gametype = type_radios[i].value;
 		}
 	}
 
 	if(difficulty == 0){
+		document.getElementById('menu-warning').innerHTML = "Selecione uma dificuldade!";
+		document.getElementById('menu-warning').style.opacity = 1;
+	}else if(gametype == "none"){
+		document.getElementById('menu-warning').innerHTML = "Selecione o modo de jogo!";
 		document.getElementById('menu-warning').style.opacity = 1;
 	}else{
 		document.getElementById('dark-overlay').style.opacity = 0;
@@ -194,7 +222,7 @@ function startGame(){
 			document.getElementById('game-table').style.opacity = 1;
 			document.getElementById('info-div').style.opacity = 1;
 		}, 1000);
-		populateTable('gametable',difficulty);
+		populateTable('gametable',difficulty,gametype);
 	}
 }
 
